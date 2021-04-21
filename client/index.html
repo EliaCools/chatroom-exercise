@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>chatroom</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+
+
+
+<div id="mainNav">
+
+
+</div>
+
+
+<div id="chat-container">
+
+    <div id="privateChat" hidden>
+        <div id="privateTextOutput">
+        </div>
+        <input type="text" id="private-message" name="private-message">
+        <button id="privateButton" ></button>
+    </div>
+    <div id="text-output-header">
+
+    </div>
+
+    <div class="text-output" id="output-room1">
+
+
+      <div id="textContainer"></div>
+
+    </div>
+
+
+
+
+    <div id="input-div">
+        <label for="text-input"></label>
+        <input type="text" id="text-input" name="text-input">
+        <button class="buttons" id="to-all"> send to all</button>
+        <button class="buttons" id="to-me"> send to me</button>
+    </div>
+</div>
+
+
+
+
+<div id="siteAds">
+    <input type="text" value="" id="avatar-input" hidden><img class="avatar" src="images/ezio.jpeg"><img class="avatar"
+                                                                                                         src="images/god-of-war.jpg">
+    <button id="chooseAvatar"> select avatar</button>
+
+    <div id="rooms">
+        <p class="roomButton" id="room1">room 1</p>
+        <p class="roomButton" id="room2">room 2</p>
+    </div>
+
+</div>
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
+</body>
+</html>
