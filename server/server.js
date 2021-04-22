@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
 
     console.log(counter++ +' someone connected');
 
-    console.log(socket.id)
+
     let name = socket.id
     io.emit('userids',(name))
 
@@ -77,36 +77,55 @@ io.on('connection', (socket) => {
     {
         let sender = socket.id;
         let userexists = privateMessages.findIndex(x => x.user === selectedUser)
-        console.log(userexists)
-             if( userexists !== -1){
+        let checker;
+
+          //   if( userexists !== -1 || privateMessages.findIndex(x => x.sender === selectedUser) !==-1 ){
                  privateMessages.forEach(privateMessage => {
-                 privateMessage.messages.push(message) ;
-             })
-             }else{
-                 privateMessages.push({"messages":[message],"user":selectedUser,"sender":sender})
-             }
+
+                    if(privateMessage.user === selectedUser && privateMessage.sender === sender ||
+                       privateMessage.user === sender && privateMessage.sender === selectedUser ){
+                        privateMessage.messages.push(message) ;
+                        console.log("test1")
+                        checker=true
+                    }
+            })
+
+                if(checker!==true){
+                    privateMessages.push({"messages":[message],"user":selectedUser,"sender":sender})
+                    console.log("test2")
+                }
+
             console.log(privateMessages.findIndex(x => x.user === selectedUser))
-        let index = privateMessages.findIndex(x => x.selectedUser === selectedUser)
-
-       // privateMessages.slice(index)
-
-      //  io.to(selectedUser).emit("displayPrivate",(message));
 
         console.log(privateMessages);
+             console.log("pushfunction");
 
-      //  socket.emit("displayPrivate",(message));
+             let requestId = socket.id
+
+            let index = privateMessages.findIndex(x => (x.sender === selectedUser || x.user === selectedUser)
+                                                        && (x.sender === requestId || x.user === requestId) )
+
+            let sliced = privateMessages.slice(index)
+
+            io.to(sliced[0].user).to(sliced[0].sender).emit("onclickPrivate",({sliced,requestId}))
+            console.log("emmitting onclickPrivate")
+
+
     })
 
-    socket.on("displayPrivate",(id) =>{
+    socket.on("displayPrivate",(selectedUser) =>{
 
-        if(privateMessages.findIndex(x => x.sender ===  id) !== -1){
-        let index = privateMessages.findIndex(x => x.sender === id )
-            let sliced = privateMessages.slice(index)
-            let slicedMessages = sliced[0].messages;
-            io.to(sliced[0].user).to(sliced[0].sender).emit("onclickPrivate",(sliced))
+        let requestId = socket.id
+        let index = privateMessages.findIndex(x => (x.sender === selectedUser || x.user === selectedUser)
+            && (x.sender === requestId || x.user === requestId) )
 
-            console.log(slicedMessages)
+        let sliced = privateMessages.slice(index)
+        if(sliced[0].user !== undefined){
+            io.to(sliced[0].user).to(sliced[0].sender).emit("onclickPrivate",({sliced,requestId}))
+            console.log("emmitting onclickPrivate")
         }
+
+
     })
 
 

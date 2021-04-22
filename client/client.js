@@ -19,9 +19,7 @@ class user {
     getUsername() {
         return this.username
     }
-    setId(id){
-        this.id = id;
-    }
+
 }
 
 document.querySelectorAll(".avatar").forEach(avatar =>
@@ -45,7 +43,7 @@ document.querySelectorAll(".avatar").forEach(avatar =>
     })
 )
 
-var currentUser;
+
 var createuser;
 
 while (createuser == null) {
@@ -148,7 +146,7 @@ socket.on('newEventListener', () => {
                 // privateMessage(id)
                 document.getElementById("privateTextOutput").innerHTML = "";
                 selectedUser = id;
-                socket.emit("displayPrivate",(id));
+                socket.emit("displayPrivate",(selectedUser));
 
             }
 
@@ -157,7 +155,7 @@ socket.on('newEventListener', () => {
 })
 
 document.getElementById("privateButton").addEventListener("click", function () {
-
+    document.getElementById("privateTextOutput").innerHTML = "";
     let message = document.getElementById("private-message").value
 
     socket.emit("privateMessage", ({message, selectedUser}))
@@ -166,19 +164,28 @@ document.getElementById("privateButton").addEventListener("click", function () {
 
 })
 
-socket.on("onclickPrivate", (sliced) => {
+socket.on("onclickPrivate", ({sliced,requestId}) => {
+
     console.log("sender" + sliced[0].sender);
     console.log("selecteduser" + selectedUser);
     console.log("sup")
-    sliced[0].messages.forEach(message => {
 
 
-        if(selectedUser === sliced[0].sender ){
-        document.getElementById("privateTextOutput").innerHTML += '<p>' + message + '</p>';
-        console.log("hiiii");
-        }
-
+    if(requestId === sliced[0].sender && selectedUser === sliced[0].user ||requestId === sliced[0].user && selectedUser === sliced[0].sender ){
+    //   if(selectedUser === sliced[0].user){
+        sliced[0].messages.forEach(message => {
+           document.getElementById("privateTextOutput").innerHTML += '<p>' + message + '</p>';
+           console.log("howdy");
     })
+       }
+   // }else{
+   //     if(selectedUser === sliced[0].sender ){
+   //         document.getElementById("privateTextOutput").innerHTML += '<p>' + message + '</p>';
+   //     }
+//
+   // }
+
+
 
 })
 
